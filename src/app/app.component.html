@@ -1,254 +1,276 @@
-<div class="container">
-  <form [formGroup]="dynamicForm">
-    <!--Data Binding the Array of Objects by ngFor Loop-->
-    <div class="mb-3" *ngFor="let formField of dynamicJsonForm.controls">
-      <!--Label-->
-      <label class="form-label">{{ formField.label }}</label>
-      <span *ngIf="formField.validators.required" class="text-danger">*</span>
-
-      <!--type="text"-->
-      <span *ngIf="formField.type == 'text'">
-        <input
-          class="form-control"
-          placeholder="{{ formField.placeholder }}"
-          type="{{ formField.type }}"
-          formControlName="{{ formField.name }}"
-          value="{{ formField.value }}"
-          [ngClass]="{
-            'is-invalid': formSubmitted && a[formField.name].errors
-          }"
-        />
-      </span>
-      <!--type="number"-->
-      <span *ngIf="formField.type == 'number'">
-        <input
-          class="form-control"
-          placeholder="{{ formField.placeholder }}"
-          type="text"
-          formControlName="{{ formField.name }}"
-          value="{{ formField.value }}"
-          [ngClass]="{
-            'is-invalid': formSubmitted && a[formField.name].errors
-          }"
-        />
-      </span>
-      <!--type="radio"-->
-      <span *ngIf="formField.type == 'radio'">
-        <div class="form-check">
-          <span *ngFor="let option of formField.options">
-            <input
-              class="m-1"
-              type="radio"
-              value="{{ option.id }}"
-              name="{{ formField.name }}"
-              formControlName="{{ formField.name }}"
-              id="{{ option.id }}"
-            />
-            <label class="form-check-label" for="{{ option.id }}">{{
-              option.valueLabel
-            }}</label>
-            <br />
-          </span>
-        </div>
-      </span>
-      <!--type="single checkbox"-->
-      <span *ngIf="formField.type == 'checkboxSingle'">
-        <div class="form-check">
-          <span *ngFor="let option of formField.options">
-            <input
-              class="m-1"
-              type="checkbox"
-              value="{{ option.valueLabel }}"
-              name="{{ formField.name }}"
-              formControlName="{{ formField.name }}"
-              id="{{ option.valueLabel }}"
-            />
-            <label class="form-check-label" for="{{ option.valueLabel }}">
-              {{ option.valueLabel }}
-            </label>
-            <br />
-          </span>
-        </div>
-      </span>
-      <!--type="terms and conditions checkbox"-->
-      <span *ngIf="formField.type == 'termsandconditions'">
-        <div class="form-check">
-          <span *ngFor="let option of formField.options">
-            <input
-              class="m-1"
-              type="checkbox"
-              value="{{ option.valueLabel }}"
-              name="{{ formField.name }}"
-              formControlName="{{ formField.name }}"
-              id="{{ option.id }}"
-            />
-            <label class="form-check-label" for="{{ option.valueLabel }}">
-              <a href="{{ formField.termsLink }}">{{ option.valueLabel }}</a>
-            </label>
-            <br />
-          </span>
-        </div>
-      </span>
-      <!--type="multiple checkbox"-->
-      <span *ngIf="formField.type == 'checkboxMultiple'">
-        <div class="form-check">
-          <span *ngFor="let option of formField.options">
-            <input
-              class="m-1"
-              type="checkbox"
-              value="{{ option.id }}"
-              name="{{ formField.name }}"
-              formControlName="{{ formField.name }}"
-              id="{{ option.id }}"
-            />
-            <label class="form-check-label" for="{{ option.valueLabel }}">
-              {{ option.valueLabel }}</label
-            >
-            <br />
-          </span>
-        </div>
-      </span>
-      <!--type="date"-->
-      <span *ngIf="formField.type == 'date'">
-        <!--past to today scenario-->
-        <span
-          *ngIf="formField.minDate == 'past' && formField.maxDate == 'today'"
-        >
-          <input
-            class="form-control"
-            type="date"
-            max="{{ minDate }}"
-            formControlName="{{ formField.name }}"
-            value="{{ formField.value }}"
-            [ngClass]="{
-              'is-invalid': formSubmitted && a[formField.name].errors
-            }"
-          />
-        </span>
-        <!--today to future scenario-->
-        <span
-          *ngIf="formField.minDate == 'today' && formField.maxDate == 'future'"
-        >
-          <input
-            class="form-control"
-            type="date"
-            min="{{ minDate }}"
-            formControlName="{{ formField.name }}"
-            value="{{ formField.value }}"
-            [ngClass]="{
-              'is-invalid': formSubmitted && a[formField.name].errors
-            }"
-          />
-        </span>
-        <!--particular past to today-->
-        <span
-          *ngIf="
-            formField.minDate == 'particularPast' &&
-            formField.maxDate == 'today'
-          "
-        >
-          <input
-            class="form-control"
-            type="date"
-            max="{{ minDate }}"
-            formControlName="{{ formField.name }}"
-            value="{{ formField.value }}"
-            [ngClass]="{
-              'is-invalid': formSubmitted && a[formField.name].errors
-            }"
-          />
-        </span>
-        <!--today to particular future-->
-        <span
-          *ngIf="
-            formField.minDate == 'today' &&
-            formField.maxDate == 'particularFuture'
-          "
-        >
-          <input
-            class="form-control"
-            type="date"
-            min="{{ minDate }}"
-            formControlName="{{ formField.name }}"
-            value="{{ formField.value }}"
-            [ngClass]="{
-              'is-invalid': formSubmitted && a[formField.name].errors
-            }"
-          />
-        </span>
-      </span>
-      <!--select Tag-->
-      <span *ngIf="formField.type == 'dropdown'">
-        <select
-          name="{{ formField.name }}"
-          class="form-control"
-          formControlName="{{ formField.name }}"
-          id="{{ formField.name }}"
-        >
-          <option
-            *ngFor="let option of formField.options"
-            value="{{ option.valueLabel }}"
-          >
-            {{ option.valueLabel }}
-          </option>
-        </select>
-      </span>
-
-      <!--Validation Message Area-->
-      <div *ngIf="a[formField.name].errors && formSubmitted">
-        <div *ngIf="formField.validators.minLength > 0">
-          <div
-            *ngIf="a[formField.name].errors?.['minlength']"
-            class="text-danger"
-          >
-            {{ formField.label }} must be at least
-            {{ formField.validators.minLength }} characters.
-          </div>
-        </div>
-        <div
-          *ngIf="
-            formField.validators.maxLength > formField.validators.minLength
-          "
-        >
-          <div
-            *ngIf="a[formField.name].errors?.['maxlength']"
-            class="text-danger"
-          >
-            {{ formField.label }} must be at least
-            {{ formField.validators.maxLength }} characters.
-          </div>
-        </div>
-        <div *ngIf="formField.validators.required">
-          <div
-            *ngIf="a[formField.name].errors?.['required']"
-            class="text-danger"
-          >
-            {{ formField.label }} is required.
-          </div>
-        </div>
-        <div *ngIf="formField.validators.pattern">
-          <div
-            *ngIf="a[formField.name].errors?.['pattern']"
-            class="text-danger"
-          >
-            Enter Valid {{ formField.label }}
-          </div>
-        </div>
-        <div *ngIf="formField.validators.min">
-          <div *ngIf="a[formField.name].errors?.['min']" class="text-danger">
-            Minimum {{ formField.label }} is {{ formField.validators.min }}
-          </div>
-        </div>
-        <div *ngIf="formField.validators.max">
-          <div *ngIf="a[formField.name].errors?.['max']" class="text-danger">
-            Maximum {{ formField.label }} is {{ formField.validators.max }}
-          </div>
-        </div>
+<div>
+  <div class="text-center">
+    <h1>Dynamic Reactive Form</h1>
+    <p>the Form will be generated dynamically by the json</p>
+  </div>
+  <div class="row m-0 p-0">
+    <div class="col-4 m-0 p-0 border">
+      <h2 class="text-center">Fill the Form to Generate JSON -> </h2>
+    </div>
+    <div class="col-4 m-0 p-0 border">
+      <h2 class="text-center">JSON will generate Form -> </h2>
+      <div class="container">
+        <pre>
+          {{this.dynamicJsonForm | json}}
+        </pre>
       </div>
     </div>
-
-    <button type="submit" class="btn btn-primary" (click)="submitForm()">
-      Submit
-    </button>
-  </form>
+    <div class="col-4 m-0 p-0 border">
+      <h2 class="text-center">Generated Form</h2>
+      <div class="container">
+        <form [formGroup]="dynamicForm">
+          <!--Data Binding the Array of Objects by ngFor Loop-->
+          <div class="mb-3" *ngFor="let formField of dynamicJsonForm.controls">
+            <!--Label-->
+            <label class="form-label">{{ formField.label }}</label>
+            <span *ngIf="formField.validators.required" class="text-danger">*</span>
+      
+            <!--type="text"-->
+            <span *ngIf="formField.type == 'text'">
+              <input
+                class="form-control"
+                placeholder="{{ formField.placeholder }}"
+                type="{{ formField.type }}"
+                formControlName="{{ formField.name }}"
+                value="{{ formField.value }}"
+                [ngClass]="{
+                  'is-invalid': formSubmitted && a[formField.name].errors
+                }"
+              />
+            </span>
+            <!--type="number"-->
+            <span *ngIf="formField.type == 'number'">
+              <input
+                class="form-control"
+                placeholder="{{ formField.placeholder }}"
+                type="text"
+                formControlName="{{ formField.name }}"
+                value="{{ formField.value }}"
+                [ngClass]="{
+                  'is-invalid': formSubmitted && a[formField.name].errors
+                }"
+              />
+            </span>
+            <!--type="radio"-->
+            <span *ngIf="formField.type == 'radio'">
+              <div class="form-check">
+                <span *ngFor="let option of formField.options">
+                  <input
+                    class="m-1"
+                    type="radio"
+                    value="{{ option.id }}"
+                    name="{{ formField.name }}"
+                    formControlName="{{ formField.name }}"
+                    id="{{ option.id }}"
+                  />
+                  <label class="form-check-label" for="{{ option.id }}">{{
+                    option.valueLabel
+                  }}</label>
+                  <br />
+                </span>
+              </div>
+            </span>
+            <!--type="single checkbox"-->
+            <span *ngIf="formField.type == 'checkboxSingle'">
+              <div class="form-check">
+                <span *ngFor="let option of formField.options">
+                  <input
+                    class="m-1"
+                    type="checkbox"
+                    value="{{ option.valueLabel }}"
+                    name="{{ formField.name }}"
+                    formControlName="{{ formField.name }}"
+                    id="{{ option.valueLabel }}"
+                  />
+                  <label class="form-check-label" for="{{ option.valueLabel }}">
+                    {{ option.valueLabel }}
+                  </label>
+                  <br />
+                </span>
+              </div>
+            </span>
+            <!--type="terms and conditions checkbox"-->
+            <span *ngIf="formField.type == 'termsandconditions'">
+              <div class="form-check">
+                <span *ngFor="let option of formField.options">
+                  <input
+                    class="m-1"
+                    type="checkbox"
+                    value="{{ option.valueLabel }}"
+                    name="{{ formField.name }}"
+                    formControlName="{{ formField.name }}"
+                    id="{{ option.id }}"
+                  />
+                  <label class="form-check-label" for="{{ option.valueLabel }}">
+                    <a href="{{ formField.termsLink }}">{{ option.valueLabel }}</a>
+                  </label>
+                  <br />
+                </span>
+              </div>
+            </span>
+            <!--type="multiple checkbox"-->
+            <span *ngIf="formField.type == 'checkboxMultiple'">
+              <div class="form-check">
+                <span *ngFor="let option of formField.options">
+                  <input
+                    class="m-1"
+                    type="checkbox"
+                    value="{{ option.id }}"
+                    name="{{ formField.name }}"
+                    formControlName="{{ formField.name }}"
+                    id="{{ option.id }}"
+                  />
+                  <label class="form-check-label" for="{{ option.valueLabel }}">
+                    {{ option.valueLabel }}</label
+                  >
+                  <br />
+                </span>
+              </div>
+            </span>
+            <!--type="date"-->
+            <span *ngIf="formField.type == 'date'">
+              <!--past to today scenario-->
+              <span
+                *ngIf="formField.minDate == 'past' && formField.maxDate == 'today'"
+              >
+                <input
+                  class="form-control"
+                  type="date"
+                  max="{{ minDate }}"
+                  formControlName="{{ formField.name }}"
+                  value="{{ formField.value }}"
+                  [ngClass]="{
+                    'is-invalid': formSubmitted && a[formField.name].errors
+                  }"
+                />
+              </span>
+              <!--today to future scenario-->
+              <span
+                *ngIf="formField.minDate == 'today' && formField.maxDate == 'future'"
+              >
+                <input
+                  class="form-control"
+                  type="date"
+                  min="{{ minDate }}"
+                  formControlName="{{ formField.name }}"
+                  value="{{ formField.value }}"
+                  [ngClass]="{
+                    'is-invalid': formSubmitted && a[formField.name].errors
+                  }"
+                />
+              </span>
+              <!--particular past to today-->
+              <span
+                *ngIf="
+                  formField.minDate == 'particularPast' &&
+                  formField.maxDate == 'today'
+                "
+              >
+                <input
+                  class="form-control"
+                  type="date"
+                  max="{{ minDate }}"
+                  formControlName="{{ formField.name }}"
+                  value="{{ formField.value }}"
+                  [ngClass]="{
+                    'is-invalid': formSubmitted && a[formField.name].errors
+                  }"
+                />
+              </span>
+              <!--today to particular future-->
+              <span
+                *ngIf="
+                  formField.minDate == 'today' &&
+                  formField.maxDate == 'particularFuture'
+                "
+              >
+                <input
+                  class="form-control"
+                  type="date"
+                  min="{{ minDate }}"
+                  formControlName="{{ formField.name }}"
+                  value="{{ formField.value }}"
+                  [ngClass]="{
+                    'is-invalid': formSubmitted && a[formField.name].errors
+                  }"
+                />
+              </span>
+            </span>
+            <!--select Tag-->
+            <span *ngIf="formField.type == 'dropdown'">
+              <select
+                name="{{ formField.name }}"
+                class="form-control"
+                formControlName="{{ formField.name }}"
+                id="{{ formField.name }}"
+              >
+                <option
+                  *ngFor="let option of formField.options"
+                  value="{{ option.valueLabel }}"
+                >
+                  {{ option.valueLabel }}
+                </option>
+              </select>
+            </span>
+      
+            <!--Validation Message Area-->
+            <div *ngIf="a[formField.name].errors && formSubmitted">
+              <div *ngIf="formField.validators.minLength > 0">
+                <div
+                  *ngIf="a[formField.name].errors?.['minlength']"
+                  class="text-danger"
+                >
+                  {{ formField.label }} must be at least
+                  {{ formField.validators.minLength }} characters.
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  formField.validators.maxLength > formField.validators.minLength
+                "
+              >
+                <div
+                  *ngIf="a[formField.name].errors?.['maxlength']"
+                  class="text-danger"
+                >
+                  {{ formField.label }} must be at least
+                  {{ formField.validators.maxLength }} characters.
+                </div>
+              </div>
+              <div *ngIf="formField.validators.required">
+                <div
+                  *ngIf="a[formField.name].errors?.['required']"
+                  class="text-danger"
+                >
+                  {{ formField.label }} is required.
+                </div>
+              </div>
+              <div *ngIf="formField.validators.pattern">
+                <div
+                  *ngIf="a[formField.name].errors?.['pattern']"
+                  class="text-danger"
+                >
+                  Enter Valid {{ formField.label }}
+                </div>
+              </div>
+              <div *ngIf="formField.validators.min">
+                <div *ngIf="a[formField.name].errors?.['min']" class="text-danger">
+                  Minimum {{ formField.label }} is {{ formField.validators.min }}
+                </div>
+              </div>
+              <div *ngIf="formField.validators.max">
+                <div *ngIf="a[formField.name].errors?.['max']" class="text-danger">
+                  Maximum {{ formField.label }} is {{ formField.validators.max }}
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <button type="submit" class="btn btn-primary" (click)="submitForm()">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
