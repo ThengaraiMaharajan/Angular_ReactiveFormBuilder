@@ -15,11 +15,12 @@ export class AppComponent implements OnInit {
   dynamicForm!: FormGroup;
   dynamicJsonForm: any;
   minDate: string = '';
+  dynamicFormValues : any;
 
   ngOnInit(){
     this.dynamicForm = this.fb.group({});
-    this.dynamicReactiveForm();
     this.minDate = new Date().toISOString().split('T')[0];
+    this.dynamicReactiveForm();
   }
 
   get a() {
@@ -139,42 +140,45 @@ export class AppComponent implements OnInit {
           },
         },
         {
+          name : 'interestedCourse',
           label: 'Interested Course',
           value: '',
-          options: [],
+          options: [
+            { valueLabel: 'CSE',id: 1 },{  valueLabel: 'ECE',id: 2 },{ valueLabel: 'E&I',id: 3 }
+          ],
           type: 'checkboxMultiple',
           placeholder: '',
           validatorPresence: true,
           validators: {
-            required: true,
+            required: false,
           },
         },
-        {
-          name: 'cse',
-          value: '',
-          options: [{ id: 1, valueLabel: 'CSE' }],
-          type: 'checkboxMultiple',
-          placeholder: '',
-          validatorPresence: true,
-          validators: {},
-        },
-        {
-          name: 'ece',
-          value: '',
-          options: [{ id: 2, valueLabel: 'ECE' }],
-          type: 'checkboxMultiple',
-          validatorPresence: true,
-          validators: {},
-        },
-        {
-          name: 'eni',
-          value: '',
-          options: [{ id: 3, valueLabel: 'E&I' }],
-          type: 'checkboxMultiple',
-          placeholder: '',
-          validatorPresence: true,
-          validators: {},
-        },
+        // {
+        //   name: 'cse',
+        //   value: '',
+        //   options: [{ id: 1, valueLabel: 'CSE' }],
+        //   type: 'checkboxMultiple',
+        //   placeholder: '',
+        //   validatorPresence: true,
+        //   validators: {},
+        // },
+        // {
+        //   name: 'ece',
+        //   value: '',
+        //   options: [{ id: 2, valueLabel: 'ECE' }],
+        //   type: 'checkboxMultiple',
+        //   validatorPresence: true,
+        //   validators: {},
+        // },
+        // {
+        //   name: 'eni',
+        //   value: '',
+        //   options: [{ id: 3, valueLabel: 'E&I' }],
+        //   type: 'checkboxMultiple',
+        //   placeholder: '',
+        //   validatorPresence: true,
+        //   validators: {},
+        // },
         {
           name: 'vehicletype',
           label: 'Mode of Transmission',
@@ -273,16 +277,27 @@ export class AppComponent implements OnInit {
     this.formSubmitted = true;
     if (this.dynamicForm.invalid) {
       alert('form is invalid');
-      console.log('isValidForm : ', this.dynamicForm.valid);
-      console.log('submitted form : \n', this.dynamicForm.value);
+      // console.log('isValidForm : ', this.dynamicForm.valid);
+      // console.log('submitted form : \n', this.dynamicForm.value);
+      this.dynamicFormValues = this.dynamicForm.value;
     } else {
       alert('form is submitted');
-      console.log('isValidForm : ', this.dynamicForm.valid);
-      console.log('submitted form : \n', this.dynamicForm.value);
+      // console.log('isValidForm : ', this.dynamicForm.valid);
+      // console.log('submitted form : \n', this.dynamicForm.value);
+      this.dynamicFormValues = this.dynamicForm.value;
     }
   }
 
   today = new Date();
   maxDate = new Date();
+  selectedCheckBoxArr : any[] = []
+  onCheckBoxChecked( e : any, formName : string ){
+    if(e.target.checked){
+      this.selectedCheckBoxArr.push(parseInt(e.target.value));
+      this.dynamicForm.get(formName)?.setValue(this.selectedCheckBoxArr); 
+    }else{
+      this.selectedCheckBoxArr.filter(item => item == parseInt(e.target.value));
+    }
+  }
 
 }

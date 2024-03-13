@@ -4,10 +4,10 @@
     <p>the Form will be generated dynamically by the json</p>
   </div>
   <div class="row m-0 p-0">
-    <div class="col-4 m-0 p-0 border">
+    <div class="col-3 m-0 p-0 border">
       <h2 class="text-center">Fill the Form to Generate JSON -> </h2>
     </div>
-    <div class="col-4 m-0 p-0 border">
+    <div class="col-3 m-0 p-0 border">
       <h2 class="text-center">JSON will generate Form -> </h2>
       <div class="container">
         <pre>
@@ -15,7 +15,7 @@
         </pre>
       </div>
     </div>
-    <div class="col-4 m-0 p-0 border">
+    <div class="col-3 m-0 p-0 border">
       <h2 class="text-center">Generated Form</h2>
       <div class="container">
         <form [formGroup]="dynamicForm">
@@ -116,9 +116,10 @@
                     class="m-1"
                     type="checkbox"
                     value="{{ option.id }}"
-                    name="{{ formField.name }}"
-                    formControlName="{{ formField.name }}"
+                     
+                     
                     id="{{ option.id }}"
+                    (input)="onCheckBoxChecked( $event, formField.name)"
                   />
                   <label class="form-check-label" for="{{ option.valueLabel }}">
                     {{ option.valueLabel }}</label
@@ -271,6 +272,11 @@
           </button>
         </form>
       </div>
+    </div>
+    <div class="col-3 m-0 p-0 border">
+      <pre>
+        {{dynamicFormValues| json}}
+      </pre>
     </div>
   </div>
 </div>
