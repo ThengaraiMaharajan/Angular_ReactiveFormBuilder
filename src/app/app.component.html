@@ -48,7 +48,9 @@
                     <div *ngFor="let option of item.value.options; let j=index">
                       <div [formGroupName]="j">
                         enter option
-                        <input formControlName="valueLabel" placeholder="Value Label">
+                        <input type="text" formControlName="valueLabel" placeholder="Value Label">
+                        enter label
+                        <input type="text" formControlName="id" placeholder="Value id">
                         <button type="button" (click)="removeOption(i, j)">Remove Option</button>
                       </div>
                     </div>
@@ -75,10 +77,10 @@
     </div>
     <div class="col-3 m-0 p-0 border">
       <h2 class="text-center">Generated Form</h2>
-      <div class="container">
+      <div *ngIf="showForms" class="container">
         <form [formGroup]="dynamicForm">
           <!--Data Binding the Array of Objects by ngFor Loop-->
-          <div class="mb-3" *ngFor="let formField of dynamicJsonForm.controls">
+          <div class="mb-3" *ngFor="let formField of dynamicJsonForm">
             <!--Label-->
             <label class="form-label">{{ formField.label }}</label>
             <span *ngIf="formField.validators.required" class="text-danger">*</span>

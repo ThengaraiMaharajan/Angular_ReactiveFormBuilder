@@ -1,5 +1,5 @@
 import { Component,OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
   minDate: string = '';
   dynamicFormValues : any;
   formFields!: FormGroup;
+  showForms : boolean = false;
 
   ngOnInit(){
 
@@ -26,7 +27,7 @@ export class AppComponent implements OnInit {
 
     this.dynamicForm = this.fb.group({});
     this.minDate = new Date().toISOString().split('T')[0];
-    this.dynamicReactiveForm();
+     
   }
 
   get a() {
@@ -66,7 +67,8 @@ export class AppComponent implements OnInit {
     const item = this.items.at(itemIndex);
     const optionsArray = item.get('options') as FormArray;
     optionsArray.push(this.fb.group({
-      valueLabel: ''
+      valueLabel: '',
+      id:''
     }));
   }
   removeOption(itemIndex: number, optionIndex: number) {
@@ -80,15 +82,16 @@ export class AppComponent implements OnInit {
   }
 
   generateForm(){
-    this.dynamicJsonForm = this.formFields.value;
+    this.dynamicJsonForm = this.formFields.value.items;
     this.dynamicReactiveForm();
   }
 
   dynamicReactiveForm() {
-    for (let formFields of this.dynamicJsonForm.items) {
+    this.showForms = true;
+    for (let formFields of this.dynamicJsonForm) {
       let validatorsToAdd: any = [];
       console.log(formFields);
-      if (formFields.validatorPresence) {
+      if (formFields.validatorPresence == "true") {
         for (let key in formFields.validators) {
           let value = formFields.validators[key];
           console.log(key, ':', value);
@@ -114,15 +117,11 @@ export class AppComponent implements OnInit {
           }
         }
         // this.dynamicForm.addControl(formFields.name,this.fb.control(formFields.value,validatorsToAdd));
-        this.dynamicForm.addControl(
-          formFields.name,
-          this.fb.control('', validatorsToAdd)
+        this.dynamicForm.addControl(formFields.name,new FormControl('', validatorsToAdd)
         );
       } else {
-        this.dynamicForm.addControl(
-          formFields.value,
-          this.fb.control(formFields.value)
-        );
+        this.dynamicForm.addControl(formFields.name,new FormControl(formFields.value)
+        );;
       }
     }
   }
@@ -131,13 +130,15 @@ export class AppComponent implements OnInit {
     this.formSubmitted = true;
     if (this.dynamicForm.invalid) {
       alert('form is invalid');
-      // console.log('isValidForm : ', this.dynamicForm.valid);
-      // console.log('submitted form : \n', this.dynamicForm.value);
+      console.log('isValidForm : ', this.dynamicForm.valid);
+      console.log('submitted form : \n', this.dynamicForm);
+      console.log('submitted form : \n', this.dynamicForm.value);
       this.dynamicFormValues = this.dynamicForm.value;
     } else {
       alert('form is submitted');
-      // console.log('isValidForm : ', this.dynamicForm.valid);
-      // console.log('submitted form : \n', this.dynamicForm.value);
+      console.log('isValidForm : ', this.dynamicForm.valid);
+      console.log('submitted form : \n', this.dynamicForm);
+      console.log('submitted form : \n', this.dynamicForm.value);
       this.dynamicFormValues = this.dynamicForm.value;
     }
   }
