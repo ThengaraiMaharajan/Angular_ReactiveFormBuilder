@@ -6,12 +6,70 @@
   <div class="row m-0 p-0">
     <div class="col-3 m-0 p-0 border">
       <h2 class="text-center">Fill the Form to Generate JSON -> </h2>
+      <div>
+        <form [formGroup]="formFields">
+          <div formArrayName="items">
+            <div *ngFor="let item of items.controls; let i=index">
+              <div [formGroupName]="i">
+                Name <input formControlName="name" placeholder="Enter text for form name" class="form-control">
+                Label <input formControlName="label" placeholder="Enter text for label" class="form-control">
+                Type
+                <select formControlName="type" class="form-control">
+                  <option value="text">text</option>
+                  <option value="number">number</option>
+                  <option value="date">date</option>
+                  <option value="email">email</option>
+                  <option value="radio">radio</option>
+                  <option value="checkbox">checkbox</option>
+                  <option value="select">select</option>
+                </select>
+                placeholder <input formControlName="placeholder" placeholder="Enter text for placeholder" class="form-control">
+                isValidators
+                <input type="radio" formControlName="validatorPresence" name="validatorPresence" id="validatorPresenceYes" value="true"> Yes
+                <input type="radio" formControlName="validatorPresence" name="validatorPresence" id="validatorPresenceNo" value="false"> No
+
+                <div formGroupName="validators" *ngIf="item.get('validatorPresence')?.value == 'true'">
+                  required
+                  <input type="radio" formControlName="required" name="required" value="true" />Yes
+                  <input type="radio" formControlName="required" name="required" value="false" />No
+                  minlength
+                  <input class="form-control" formControlName="minLength" placeholder="Enter validators">
+                  max length
+                  <input class="form-control" formControlName="maxLength" placeholder="Enter validators">
+                  min
+                  <input class="form-control" formControlName="min" placeholder="Enter validators">
+                  max
+                  <input class="form-control" formControlName="max" placeholder="Enter validators">
+                  pattern
+                  <input class="form-control" formControlName="pattern" placeholder="Enter validators">
+                </div>
+                <div *ngIf="item.get('type')?.value == 'radio' || item.get('type')?.value == 'checkboxMultiple' || item.get('type')?.value == 'checkbox' || item.get('type')?.value == 'select'">
+                  <div formArrayName="options">
+                    <div *ngFor="let option of item.value.options; let j=index">
+                      <div [formGroupName]="j">
+                        enter option
+                        <input formControlName="valueLabel" placeholder="Value Label">
+                        <button type="button" (click)="removeOption(i, j)">Remove Option</button>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" (click)="addOption(i)">Add Option</button>
+                </div>
+                
+                <button type="button" (click)="removeItem(i)">Remove</button>
+              </div>
+            </div>
+          </div>
+          <button type="button" (click)="addItem()">Add Item</button>
+          <button type="button" (click)="generateForm()">Generate Form</button>
+        </form>
+      </div>
     </div>
     <div class="col-3 m-0 p-0 border">
       <h2 class="text-center">JSON will generate Form -> </h2>
       <div class="container">
         <pre>
-          {{this.dynamicJsonForm | json}}
+          {{formFields.value | json}}
         </pre>
       </div>
     </div>
