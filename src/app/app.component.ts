@@ -8,16 +8,21 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 })
 export class AppComponent implements OnInit {
   title = 'dynamicReactiveFormBuilding';
-  constructor(
-    private fb: FormBuilder
-  ){}
-
   dynamicForm!: FormGroup;
   dynamicJsonForm: any;
   minDate: string = '';
   dynamicFormValues : any;
   formFields!: FormGroup;
   showForms : boolean = false;
+  formSubmitted: boolean = false;
+  today = new Date();
+  maxDate = new Date();
+  selectedCheckBoxArr : any[] = [];
+  generateFormButtonClicked : boolean = false;
+
+  constructor(
+    private fb: FormBuilder
+  ){}
 
   ngOnInit(){
 
@@ -33,7 +38,6 @@ export class AppComponent implements OnInit {
   get a() {
     return this.dynamicForm.controls;
   }
-  formSubmitted: boolean = false;
 
   get items() {
     return this.formFields.get('items') as FormArray;
@@ -41,12 +45,12 @@ export class AppComponent implements OnInit {
 
   createItem() {
     return this.fb.group({
-      name: '',
+      name:  ['',[Validators.required]],
       label : '',
       value :'',
-      type:'',
+      type: ['',[Validators.required]],
       placeholder : '',
-      validatorPresence : false,
+      validatorPresence :  [false,[Validators.required]],
       validators: this.fb.group({
         required: false,
         minLength:'',
@@ -71,6 +75,7 @@ export class AppComponent implements OnInit {
       id:''
     }));
   }
+
   removeOption(itemIndex: number, optionIndex: number) {
     const item = this.items.at(itemIndex);
     const optionsArray = item.get('options') as FormArray;
@@ -83,37 +88,39 @@ export class AppComponent implements OnInit {
 
   generateForm(){
     this.dynamicJsonForm = this.formFields.value.items;
-    this.dynamicReactiveForm();
+    this.dynamicReactiveForm(this.formFields.value.items);
   }
 
-  dynamicReactiveForm() {
+  dynamicReactiveForm(formFieldsJson : any) {
     this.showForms = true;
-    for (let formFields of this.dynamicJsonForm) {
+    for (let formFields of formFieldsJson) {
       let validatorsToAdd: any = [];
-      console.log(formFields);
-      if (formFields.validatorPresence == "true") {
+      console.log('Form fields Json \n',formFields);
+      if (formFields.validatorPresence === "true") {
         for (let key in formFields.validators) {
           let value = formFields.validators[key];
-          console.log(key, ':', value);
-          switch (key) {
-            case 'required':
-              validatorsToAdd.push(Validators.required);
-              break;
-            case 'minLength':
-              validatorsToAdd.push(Validators.minLength(value));
-              break;
-            case 'maxLength':
-              validatorsToAdd.push(Validators.maxLength(value));
-              break;
-            case 'pattern':
-              validatorsToAdd.push(Validators.pattern(value));
-              break;
-            case 'min':
-              validatorsToAdd.push(Validators.min(value));
-              break;
-            case 'max':
-              validatorsToAdd.push(Validators.max(value));
-              break;
+          console.log('Validators Key Value Pair \n',key, ':', value);
+          if(value !== ""){
+            switch (key) {
+              case 'required':
+                validatorsToAdd.push(Validators.required);
+                break;
+              case 'minLength':
+                validatorsToAdd.push(Validators.minLength(value));
+                break;
+              case 'maxLength':
+                validatorsToAdd.push(Validators.maxLength(value));
+                break;
+              case 'pattern':
+                validatorsToAdd.push(Validators.pattern(value));
+                break;
+              case 'min':
+                validatorsToAdd.push(Validators.min(value));
+                break;
+              case 'max':
+                validatorsToAdd.push(Validators.max(value));
+                break;
+            }
           }
         }
         // this.dynamicForm.addControl(formFields.name,this.fb.control(formFields.value,validatorsToAdd));
@@ -129,13 +136,11 @@ export class AppComponent implements OnInit {
   submitForm() {
     this.formSubmitted = true;
     if (this.dynamicForm.invalid) {
-      alert('form is invalid');
       console.log('isValidForm : ', this.dynamicForm.valid);
       console.log('submitted form : \n', this.dynamicForm);
       console.log('submitted form : \n', this.dynamicForm.value);
       this.dynamicFormValues = this.dynamicForm.value;
     } else {
-      alert('form is submitted');
       console.log('isValidForm : ', this.dynamicForm.valid);
       console.log('submitted form : \n', this.dynamicForm);
       console.log('submitted form : \n', this.dynamicForm.value);
@@ -143,9 +148,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  today = new Date();
-  maxDate = new Date();
-  selectedCheckBoxArr : any[] = []
   onCheckBoxChecked( e : any, formName : string ){
     if(e.target.checked){
       this.selectedCheckBoxArr.push(parseInt(e.target.value));

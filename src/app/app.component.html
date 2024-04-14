@@ -5,70 +5,125 @@
   </div>
   <div class="row m-0 p-0">
     <div class="col-3 m-0 p-0 border">
-      <h2 class="text-center">Fill the Form to Generate JSON -> </h2>
-      <div>
+      <h4 class="text-center">Fill the Form to Generate JSON</h4>
+      <div class="container" >
         <form [formGroup]="formFields">
-          <div formArrayName="items">
+          <div formArrayName="items" >
             <div *ngFor="let item of items.controls; let i=index">
-              <div [formGroupName]="i">
-                Name <input formControlName="name" placeholder="Enter text for form name" class="form-control">
-                Label <input formControlName="label" placeholder="Enter text for label" class="form-control">
-                Type
-                <select formControlName="type" class="form-control">
-                  <option value="text">text</option>
-                  <option value="number">number</option>
-                  <option value="date">date</option>
-                  <option value="email">email</option>
-                  <option value="radio">radio</option>
-                  <option value="checkbox">checkbox</option>
-                  <option value="select">select</option>
-                </select>
-                placeholder <input formControlName="placeholder" placeholder="Enter text for placeholder" class="form-control">
-                isValidators
-                <input type="radio" formControlName="validatorPresence" name="validatorPresence" id="validatorPresenceYes" value="true"> Yes
-                <input type="radio" formControlName="validatorPresence" name="validatorPresence" id="validatorPresenceNo" value="false"> No
-
-                <div formGroupName="validators" *ngIf="item.get('validatorPresence')?.value == 'true'">
-                  required
-                  <input type="radio" formControlName="required" name="required" value="true" />Yes
-                  <input type="radio" formControlName="required" name="required" value="false" />No
-                  minlength
-                  <input class="form-control" formControlName="minLength" placeholder="Enter validators">
-                  max length
-                  <input class="form-control" formControlName="maxLength" placeholder="Enter validators">
-                  min
-                  <input class="form-control" formControlName="min" placeholder="Enter validators">
-                  max
-                  <input class="form-control" formControlName="max" placeholder="Enter validators">
-                  pattern
-                  <input class="form-control" formControlName="pattern" placeholder="Enter validators">
-                </div>
-                <div *ngIf="item.get('type')?.value == 'radio' || item.get('type')?.value == 'checkboxMultiple' || item.get('type')?.value == 'checkbox' || item.get('type')?.value == 'select'">
-                  <div formArrayName="options">
-                    <div *ngFor="let option of item.value.options; let j=index">
-                      <div [formGroupName]="j">
-                        enter option
-                        <input type="text" formControlName="valueLabel" placeholder="Value Label">
-                        enter label
-                        <input type="text" formControlName="id" placeholder="Value id">
-                        <button type="button" (click)="removeOption(i, j)">Remove Option</button>
-                      </div>
+              <div [formGroupName]="i" class="border mt-2"> 
+                
+                <div  class="p-2">
+                  <div class="row" >
+                    <div class="col">
+                      Form Field :  {{i+1}} 
+                    </div>
+                    <div class="col">
+                      <button type="button" (click)="removeItem(i)" class="btn btn-sm btn-danger" >Remove</button>
                     </div>
                   </div>
-                  <button type="button" (click)="addOption(i)">Add Option</button>
-                </div>
+
+                  <div class="form-group" >
+                    <label for="Name" class="m-0 p-0">Name</label> <span class="text-danger" >*</span> 
+                    <input formControlName="name" placeholder="Enter text for form name" class="form-control" id="Name">
+                  </div>
+  
+                  <div class="form-group" >
+                    <label for="label" class="m-0 p-0">Label</label> 
+                    <input formControlName="label" placeholder="Enter text for label" class="form-control" id="label">
+                  </div>
+                  
+                  <div class="form-group" >
+                    <label for="type" class="m-0 p-0">Type</label> <span class="text-danger" >*</span>
+                    <select formControlName="type" class="form-control" id="type">
+                      <option value="text">text</option>
+                      <option value="number">number</option>
+                      <option value="date">date</option>
+                      <option value="email">email</option>
+                      <option value="radio">radio</option>
+                      <option value="checkbox">checkbox</option>
+                      <option value="select">select</option>
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="placeholder" class="m-0 p-0">placeholder</label>
+                    <input formControlName="placeholder" placeholder="Enter text for placeholder" class="form-control" id="placeholder">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label class="m-0 p-0">isValidators</label> <span class="text-danger" >*</span>
+                    <br>
+                    <input type="radio" formControlName="validatorPresence" name="validatorPresence" id="validatorPresenceYes" value="true">&nbsp;<label class="m-0 p-0" for="validatorPresenceYes">Yes</label> &nbsp; &nbsp;
+                    <input type="radio" formControlName="validatorPresence" name="validatorPresence" id="validatorPresenceNo" value="false">&nbsp;<label class="m-0 p-0" for="validatorPresenceNo">No</label>
+                  </div>
                 
-                <button type="button" (click)="removeItem(i)">Remove</button>
+  
+                  <div formGroupName="validators" *ngIf="item.get('validatorPresence')?.value == 'true'">
+                    <div class="form-group">
+                      <label class="m-0 p-0">required</label>
+                      <br>
+                      <input type="radio" formControlName="required" name="required" value="true" id="requiredYes"/>&nbsp;<label for="requiredYes">Yes</label> &nbsp; &nbsp;
+                      <input type="radio" formControlName="required" name="required" value="false" id="requiredNo"/>&nbsp;<label for="requiredNo">No</label>
+                    </div>
+  
+                    <div class="form-group">
+                      <label class="m-0 p-0">minlength</label>
+                      <input class="form-control" formControlName="minLength" placeholder="Enter validators">
+                    </div>
+                    <div class="form-group">
+                      <label class="m-0 p-0">maxlength</label>
+                      <input class="form-control" formControlName="maxLength" placeholder="Enter validators">
+                    </div>
+                    <div class="form-group">
+                      <label class="m-0 p-0">min</label>
+                      <input class="form-control" formControlName="min" placeholder="Enter validators">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="m-0 p-0">max</label>
+                      <input class="form-control" formControlName="max" placeholder="Enter validators">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="m-0 p-0">pattern</label>
+                      <input class="form-control" formControlName="pattern" placeholder="Enter validators">
+                    </div>
+  
+                  </div>
+  
+                  <div *ngIf="item.get('type')?.value == 'radio' || item.get('type')?.value == 'checkboxMultiple' || item.get('type')?.value == 'checkbox' || item.get('type')?.value == 'select'">
+                    <div formArrayName="options">
+                      <div *ngFor="let option of item.value.options; let j=index">
+                        <div [formGroupName]="j">
+                          <div class="form-group">
+                            <label for="enterOption">enter option</label>
+                            <input type="text" formControlName="valueLabel" placeholder="Value Label"  id="enterOption" class="form-control">
+                          </div>
+                          <div class="formgroup">
+                            <label for="enterLabel">enter label</label>
+                            <input type="text" formControlName="id" placeholder="Value id" id="enterLabel" class="form-control">
+                          </div>
+                          <button type="button" (click)="removeOption(i, j)" class="btn btn-sm btn-danger" >Remove Option</button>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="button" (click)="addOption(i)" class="btn btn-sm btn-primary" >Add Option</button>
+                  </div>
+  
+                  
+                </div>
+
               </div>
             </div>
           </div>
-          <button type="button" (click)="addItem()">Add Item</button>
-          <button type="button" (click)="generateForm()">Generate Form</button>
+          <button type="button" (click)="addItem()" class="btn btn-primary mt-2" >Add Form Field</button>
+          <br>
+          <button type="button" (click)="generateForm()" class="btn btn-success mt-2" >Generate Form</button>
         </form>
       </div>
     </div>
     <div class="col-3 m-0 p-0 border">
-      <h2 class="text-center">JSON will generate Form -> </h2>
+      <h4 class="text-center">JSON will generate Form </h4>
       <div class="container">
         <pre>
           {{formFields.value | json}}
@@ -76,7 +131,7 @@
       </div>
     </div>
     <div class="col-3 m-0 p-0 border">
-      <h2 class="text-center">Generated Form</h2>
+      <h4 class="text-center">Generated Form</h4>
       <div *ngIf="showForms" class="container">
         <form [formGroup]="dynamicForm">
           <!--Data Binding the Array of Objects by ngFor Loop-->
@@ -334,6 +389,7 @@
       </div>
     </div>
     <div class="col-3 m-0 p-0 border">
+      <h4 class="text-center">User Submitted Form</h4>
       <pre>
         {{dynamicFormValues| json}}
       </pre>
